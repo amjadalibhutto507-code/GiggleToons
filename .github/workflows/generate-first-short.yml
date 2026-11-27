@@ -34,7 +34,7 @@ jobs:
         run: python scripts/generate_first_short.py
 
       - name: Upload generated MP4
-        if: success()
+        if: success() && inputs.allow_credit_use
         uses: actions/upload-artifact@v4
         with:
           name: giggletoons-first-short
