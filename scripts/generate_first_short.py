@@ -10,9 +10,6 @@ BASE = "https://api.magichour.ai"
 KEY = os.environ.get("MAGIC_HOUR_API_KEY")
 if not KEY:
     raise SystemExit("Missing MAGIC_HOUR_API_KEY GitHub Actions secret.")
-if os.environ.get("ALLOW_MAGIC_HOUR_CREDITS") != "true":
-    raise SystemExit("Generation not started: set the workflow input allow_credit_use=true only if you approve using existing Magic Hour credits. No purchase or top-up is ever made.")
-
 headers = {"Authorization": f"Bearer {KEY}", "Accept": "application/json", "Content-Type": "application/json"}
 
 def request(url, method="GET", data=None):
@@ -32,6 +29,9 @@ print("Account response (sensitive fields omitted):", json.dumps({
     k: v for k, v in account.items()
     if any(word in k.lower() for word in ("credit", "plan", "subscription", "balance"))
 }, ensure_ascii=False))
+
+if os.environ.get("ALLOW_MAGIC_HOUR_CREDITS") != "true":
+    raise SystemExit("Account/key verified. Safe stop: no video generation or credits used. Set allow_credit_use=true only when you explicitly approve one generation.")
 
 prompt = """Create a premium, highly expressive, original 3D animated comedy scene for a family-friendly YouTube Short, vertical 9:16. Two original characters with consistent designs: a tiny chubby orange kitten wearing a slightly oversized blue hoodie, and a clever green parrot with a tiny red cap. Photoreal-quality 3D fur and feathers, cinematic soft studio lighting, richly detailed cozy Pakistani kitchen, realistic physics, expressive eyes and clear readable body language, smooth fluid character animation, dynamic camera push-in, crisp sound design and natural character voices. Start immediately with a strong visual hook: the kitten is secretly dragging an enormous golden fried chicken drumstick across the kitchen counter, much bigger than its body. The parrot suddenly swings into frame and loudly says in natural conversational Pakistani Urdu: 'Oye! Yeh kis ka dinner chura rahe ho?' The kitten freezes, slowly looks straight at camera, then confidently replies in Urdu: 'Main quality check kar raha hoon!' At the exact punchline, the drumstick slips, bounces once, and lands perfectly on the parrot's head like a silly hat. The parrot gives a shocked deadpan stare; kitten bursts into silent giggles. End on a composition and pose that can loop naturally to the opening. Funny, wholesome, instantly understandable visual comedy, excellent lip sync if supported, no subtitles, no captions, no logos, no watermark, no extra limbs, no character morphing, no scene cuts, no copyrighted characters or music."""
 
