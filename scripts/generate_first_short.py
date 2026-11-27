@@ -10,6 +10,8 @@ BASE = "https://api.magichour.ai"
 KEY = os.environ.get("MAGIC_HOUR_API_KEY")
 if not KEY:
     raise SystemExit("Missing MAGIC_HOUR_API_KEY GitHub Actions secret.")
+if os.environ.get("ALLOW_MAGIC_HOUR_CREDITS") != "true":
+    raise SystemExit("Generation not started: set the workflow input allow_credit_use=true only if you approve using existing Magic Hour credits. No purchase or top-up is ever made.")
 
 headers = {"Authorization": f"Bearer {KEY}", "Accept": "application/json", "Content-Type": "application/json"}
 
