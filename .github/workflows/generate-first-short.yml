@@ -1,18 +1,21 @@
-name: Generate GiggleToons First Short
+name: Generate GiggleToons Short
 
 on:
-  push:
-    paths:
-      - '.github/workflows/generate-first-short.yml'
-      - 'scripts/generate_first_short.py'
-      - 'scripts/viral_short_prompt.txt'
   workflow_dispatch:
     inputs:
       allow_credit_use:
-        description: "Approve using existing Magic Hour account credits for one 10-second generation"
+        description: "Approve one Magic Hour generation (credits will be charged)"
         required: true
         type: boolean
         default: false
+      duration_seconds:
+        description: "Video duration in seconds (5 seconds is the low-credit test)"
+        required: true
+        type: choice
+        options:
+          - "5"
+          - "10"
+        default: "5"
 
 permissions:
   contents: read
@@ -33,14 +36,16 @@ jobs:
       - name: Generate one vertical Short with Magic Hour
         env:
           MAGIC_HOUR_API_KEY: ${{ secrets.MAGIC_HOUR_API_KEY }}
-          ALLOW_MAGIC_HOUR_CREDITS: ${{ github.event_name == 'push' || inputs.allow_credit_use }}
+          ALLOW_MAGIC_HOUR_CREDITS: ${{ inputs.allow_credit_use }}
+          VIDEO_DURATION_SECONDS: ${{ inputs.duration_seconds }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
         run: python scripts/generate_first_short.py
 
       - name: Upload generated MP4
-        if: success() && (github.event_name == 'push' || inputs.allow_credit_use)
+        if: success() && inputs.allow_credit_use
         uses: actions/upload-artifact@v4
         with:
-          name: giggletoons-first-short
-          path: output/giggletoons_puppy_robot_vacuum_short.mp4
+          name: giggletoons-billi-doctor-short
+          path: output/giggletoons_billi_doctor_hiccups_short.mp4
           if-no-files-found: error
           retention-days: 7
