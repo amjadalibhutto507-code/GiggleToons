@@ -1,0 +1,1 @@
+Recovery-only trigger: reuse the existing Magic Hour idempotency key and retrieve the already-rendered MP4. Do not create a new generation.
