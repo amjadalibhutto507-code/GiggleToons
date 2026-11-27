@@ -1,0 +1,34 @@
+name: Generate GiggleToons First Short
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate one vertical Short with Magic Hour
+        env:
+          MAGIC_HOUR_API_KEY: ${{ secrets.MAGIC_HOUR_API_KEY }}
+        run: python scripts/generate_first_short.py
+
+      - name: Upload generated MP4
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: giggletoons-first-short
+          path: output/giggletoons_quality_check_short.mp4
+          if-no-files-found: error
+          retention-days: 7
