@@ -2,6 +2,12 @@ name: Generate GiggleToons First Short
 
 on:
   workflow_dispatch:
+    inputs:
+      allow_credit_use:
+        description: "Approve using existing Magic Hour account credits for one 10-second generation"
+        required: true
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -22,6 +28,7 @@ jobs:
       - name: Generate one vertical Short with Magic Hour
         env:
           MAGIC_HOUR_API_KEY: ${{ secrets.MAGIC_HOUR_API_KEY }}
+          ALLOW_MAGIC_HOUR_CREDITS: ${{ inputs.allow_credit_use }}
         run: python scripts/generate_first_short.py
 
       - name: Upload generated MP4
