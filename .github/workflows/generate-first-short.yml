@@ -41,6 +41,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: giggletoons-first-short
-          path: output/giggletoons_quality_check_short.mp4
+          path: output/giggletoons_puppy_robot_vacuum_short.mp4
           if-no-files-found: error
           retention-days: 7
