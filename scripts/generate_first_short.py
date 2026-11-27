@@ -37,7 +37,7 @@ if os.environ.get("ALLOW_MAGIC_HOUR_CREDITS") != "true":
 prompt = Path("scripts/viral_short_prompt.txt").read_text(encoding="utf-8").strip()
 
 payload = {
-    "name": "GiggleToons - Quality Check Chicken Prank",
+    "name": "GiggleToons - Puppy vs Robot Vacuum Bone Chase",
     "end_seconds": 10,
     "aspect_ratio": "9:16",
     "resolution": "480p",
@@ -47,7 +47,7 @@ payload = {
 }
 
 # A fixed idempotency key prevents accidental duplicate charges if this workflow is retried.
-idem = "giggletoons-first-short-quality-check-v1"
+idem = "giggletoons-puppy-robot-vacuum-short-v1"
 req = urllib.request.Request(
     f"{BASE}/v1/text-to-video",
     data=json.dumps(payload).encode(),
@@ -75,7 +75,7 @@ for attempt in range(60):
         if not downloads or not downloads[0].get("url"):
             raise SystemExit("Render completed but no download URL was returned.")
         video_url = downloads[0]["url"]
-        out = Path("output/giggletoons_quality_check_short.mp4")
+        out = Path("output/giggletoons_puppy_robot_vacuum_short.mp4")
         out.parent.mkdir(parents=True, exist_ok=True)
         urllib.request.urlretrieve(video_url, out)
         print(f"Saved video: {out}; {out.stat().st_size} bytes; {info.get('width')}x{info.get('height')}; {info.get('credits_charged')} credits.")
